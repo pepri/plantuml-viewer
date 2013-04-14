@@ -1,8 +1,8 @@
 {
 	"name": "PlantUML Viewer",
-	"version": "1.0",
+	"version": "1.2",
 	"manifest_version": 2,
-	"description": "Shows images created by PlantUML.",
+	"description": "Shows graphs and diagrams rendered by PlantUML (UML, Ditaa and Dot).",
 	"icons": {
 		"16": "images/icon16.png",
 		"32": "images/icon32.png",

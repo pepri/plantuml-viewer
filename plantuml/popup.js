@@ -1,25 +1,34 @@
-function $(id) {
-	return document.getElementById(id);
-}
+var form = document.forms[0];
 
 chrome.extension.sendRequest({ command: 'readSettings' }, function(response) {
-	$('server').value = response.server;
-	$('reload').checked = response.reload;
+	form.server.value = response.server;
+	form.reload.checked = response.reload;
+	for (var i = 0, n = form.type.length; i < n; ++i)
+		if (form.type[i].value == response.type) {
+			form.type[i].checked = true;
+			break;
+		}
 });
 
-$('save').onclick = function() {
+form.save.onclick = function() {
+	for (var i = 0, n = form.type.length; i < n; ++i)
+		if (form.type[i].checked) {
+			type = form.type[i];
+			break;
+		}
 	var request = {
 		command: 'writeSettings',
 		data: {
-			server: $('server').value,
-			reload: $('reload').checked
+			server: form.server.value,
+			reload: form.reload.checked,
+			type: type.value
 		}
 	};
 	chrome.extension.sendRequest(request, function() { });
 	close();
 }
 
-$('reset').onclick = function() {
+form.reset.onclick = function() {
 	var request = {
 		command: 'writeSettings',
 		data: new Object
@@ -28,6 +37,6 @@ $('reset').onclick = function() {
 	close();
 }
 
-$('close').onclick = function() {
+form.close.onclick = function() {
 	close();
 }

@@ -44,8 +44,9 @@ function compress(s) {
 }
 
 var defaultSettings = {
-	server: 'http://www.plantuml.com/plantuml/',
-	reload: true
+	server: 'http://www.plantuml.com/plantuml',
+	reload: true,
+	type: 'img'
 };
 
 function sanitizeUrl(url) {
@@ -53,15 +54,22 @@ function sanitizeUrl(url) {
 		return undefined;
 	if (!/[a-zA-Z]+:\/\//.test(url))
 		url = 'http://' + url;
-	if (url.substr(-1) != '/')
-		url += '/'
+	if (url.substr(-1) == '/')
+		url = url.slice(0, -1);
 	return url;
+}
+
+function sanitizeType(type) {
+	if (['img', 'svg', 'txt', 'none'].indexOf(type) == -1)
+		return 'img';
+	return type;
 }
 
 function readSettings() {
 	return {
-		server: localStorage['server'] || defaultSettings.server,
-		reload: localStorage['reload'] !== 'false'
+		server: sanitizeUrl(localStorage['server'] || defaultSettings.server),
+		reload: localStorage['reload'] !== 'false',
+		type: sanitizeType(localStorage['type'] || defaultSettings.type)
 	};
 }
 
@@ -72,10 +80,23 @@ function writeSettings(settings) {
 			localStorage[x] = settings[x];
 		else
 			localStorage.removeItem(x);
+	chrome.tabs.getSelected(null, function(tab) {
+		chrome.tabs.sendMessage(tab.id, {
+			command: 'savedSettings',
+			settings: readSettings()
+		})
+	});
 }
 
 chrome.extension.onRequest.addListener(
 	function(request, sender, sendResponse) {
+		/*console.log(request);
+		var oldSendResponse = sendResponse;
+		sendResponse = function() {
+			console.log.apply(console, arguments);
+			oldSendResponse.apply(this, arguments);
+		}*/
+
 		var command = request && request.command;
 		switch (command) {
 			case 'showPageAction':

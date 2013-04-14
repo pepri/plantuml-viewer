@@ -3,20 +3,57 @@
 	<meta charset="utf-8" />
 	<title>PlantUML</title>
 <style>
-html { font-family: sans-serif; font-size: 13px; overflow: hidden; }
-body { padding: 0; margin: 0; min-width: 200px; }
-#server { width: 200px; }
-p { margin: 0; }
+html { font-family: sans-serif; font-size: 13px; overflow: hidden; cursor: default; }
+body { padding: 0; margin: 3px; min-width: 230px; }
+input[name=server] { width: 230px; }
+p { margin: 6px 0; }
+ul { list-style: none; margin: 0; padding: 0; }
+li { display: inline-block; margin: 0 3px 0 0; padding: 0; }
+input:not([type]) {
+	border: 1px solid #ccc;
+	-webkit-transition: border linear .2s, box-shadow linear .2s;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	border-radius: 4px;
+	height: 18px;
+	padding: 2px 3px;
+	color: #333;
+}
+input[type=checkbox],input[type=radio] {
+	vertical-align: middle;
+	margin: 0 0 3px 3px;
+}
+input[type=button] {
+	border: 1px solid #ccc;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+	padding: 3px 8px;
+	border-radius: 4px;
+	color: #333;
+}
+input[type=button]:hover {
+	background-image: none;
+}
 </style>
 </head><body>
-	<p>
-		<div>Server: <input id="server"></div>
-		<div><label><input id="reload" type="checkbox" /> Update changes automatically</label></div>
-	</p>
-	<p>
-		<input type="button" id="save" value="Save" />
-		<input type="button" id="reset" value="Reset" />
-		<input type="button" id="close" value="Close" />
-	</p>
+	<form>
+		<p>
+			<div>Server: <input name="server" /></div>
+		</p>
+		<p>
+			<div><label><input id="reload" type="checkbox" checked="true" /> Update changes automatically</label></div>
+		</p>
+		<p>
+			<ul id="type-list">
+				<li><label><input type="radio" name="type" value="img" checked="checked" /> PNG</label></li>
+				<li><label><input type="radio" name="type" value="svg" /> SVG</label></li>
+				<li><label><input type="radio" name="type" value="txt" /> TXT</label></li>
+				<li><label><input type="radio" name="type" value="none" /> None</label></li>
+			</ul>
+		</p>
+		<p>
+			<input type="button" name="save" value="Save" />
+			<input type="button" name="reset" value="Reset" />
+			<input type="button" name="close" value="Close" autofocus="autofocus" />
+		</p>
+	</form>
 	<script src="popup.js"></script>
 </body></html>
