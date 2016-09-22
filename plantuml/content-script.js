@@ -37,7 +37,8 @@ if (!document.doctype &&
 					break;
 
 				case 'svg':
-					document.body.innerHTML = ['<img id="im" src="', escapeHtml(url), '" />'].join('');
+					//document.body.innerHTML = ['<img id="im" src="', escapeHtml(url), '" />'].join('');
+          document.body.innerHTML = ['<object data="', escapeHtml(url), '" type="image/svg+xml"> Fail </object>'].join('');
 					break;
 
 				case 'txt':
