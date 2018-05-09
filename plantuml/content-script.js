@@ -1,10 +1,22 @@
-if (!document.doctype &&
-		document.documentElement.namespaceURI == 'http://www.w3.org/1999/xhtml' &&
-		document.body.textContent.substr(0, '@start'.length) == '@start') {
+
+if(document.body.textContent.substr(0, '@startuml'.length) == '@startuml') {
+	translateUml(document.body);
+}
+
+var c = document.querySelectorAll('code');
+var i;
+for (i = 0; i < c.length; i++) {
+    if(c[i].textContent.substr(0, '@startuml'.length) == '@startuml') {
+    	translateUml(c[i])
+    }
+}
+
+function translateUml(element) {
 	chrome.extension.sendRequest({
 		command: 'showPageAction'
 	});
-	var data = document.body.textContent;
+
+	var data = element.textContent;
 	var reload = true;
 	var shown = false;
 	var type = 'none';
@@ -33,19 +45,19 @@ if (!document.doctype &&
 
 			switch (response.settings.type) {
 				case 'img':
-					document.body.innerHTML = ['<img id="im" src="', escapeHtml(url), '" />'].join('');
+					element.innerHTML = ['<img id="im" src="', escapeHtml(url).replace(/^http:/, "https:"), '" />'].join('');
 					break;
 
 				case 'svg':
-					document.body.innerHTML = ['<img id="im" src="', escapeHtml(url), '" />'].join('');
+					element.innerHTML = ['<img id="im" src="', escapeHtml(url).replace(/^http:/, "https:"), '" />'].join('');
 					break;
 
 				case 'txt':
-					document.body.innerHTML = '';
+					element.innerHTML = '';
 					showXhr = new XMLHttpRequest();
 					showXhr.onreadystatechange = function() {
 						if (showXhr.readyState == 4 && showXhr.status != 404) {
-							document.body.innerHTML = ['<pre>' + escapeHtml(showXhr.responseText) + '</pre>'].join('');
+							element.innerHTML = ['<pre>' + escapeHtml(showXhr.responseText) + '</pre>'].join('');
 						}
 					}
 					showXhr.open('GET', url);
@@ -54,7 +66,7 @@ if (!document.doctype &&
 
 				default:
 				case 'none':
-					document.body.innerHTML = ['<pre>' + escapeHtml(data) + '</pre>'];
+					element.innerHTML = ['<pre>' + escapeHtml(data) + '</pre>'];
 					break;
 			}
 		});
@@ -82,13 +94,6 @@ if (!document.doctype &&
 
 	chrome.extension.onMessage.addListener(
 		function(request, sender, sendResponse) {
-			/*console.log(request);
-			var oldSendResponse = sendResponse;
-			sendResponse = function() {
-				console.log.apply(console, arguments);
-				oldSendResponse.apply(this, arguments);
-			}*/
-
 			var command = request && request.command;
 			switch (command) {
 				case 'savedSettings':

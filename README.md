@@ -3,6 +3,16 @@
 Renders UML diagram as defined in a text file. For full syntax, see:
 http://plantuml.sourceforge.net/index.html
 
+To install this development version:
+
+1. Clone this repo locally
+2. Visit chrome://extensions/
+3. Ensure that 'Developer mode' is switched on
+4. Click "Load Unpacked"
+5. Select the PlantUML source directory
+
+To install the official version:
+
 1. Install the extension from Chrome Web Store.
 2. Check "Allow access to file URLs" in chrome://extensions/.
 3. Open local or remote text file with UML diagram definition in browser (the text starts with @startuml).
